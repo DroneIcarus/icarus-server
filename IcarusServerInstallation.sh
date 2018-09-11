@@ -20,7 +20,7 @@ echo Node installation Done!
 
 
 echo Staring MongoDB installation...
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4#
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 
 #Ubuntu 14
 if [[ `lsb_release -rs` == "14.04" ]]
