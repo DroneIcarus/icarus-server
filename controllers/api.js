@@ -35,6 +35,12 @@ exports.getApi = (req, res) => {
   });
 };
 
+exports.getDroneMission = (req, res) => {
+  console.log('getDroneMission');
+  return 'allo';
+};
+
+
 /**
  * GET /api/foursquare
  * Foursquare API example.
