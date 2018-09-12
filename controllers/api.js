@@ -13,6 +13,7 @@ const clockwork = require('clockwork')({ key: process.env.CLOCKWORK_KEY });
 const paypal = require('paypal-rest-sdk');
 const lob = require('lob')(process.env.LOB_KEY);
 const ig = require('instagram-node').instagram();
+const fs = require('fs');
 const { Venues, Users } = require('node-foursquare')({
   secrets: {
     clientId: process.env.FOURSQUARE_ID,
@@ -36,8 +37,19 @@ exports.getApi = (req, res) => {
 };
 
 exports.getDroneMission = (req, res) => {
-  console.log('getDroneMission');
-  return 'allo';
+  var mission_initial = null;
+  var mission_optimized = null;
+
+  if(req.query && req.query.qgcPlan) {
+    mission_initial = req.query.qgcPlan;
+  }
+
+  console.log('getDroneMission2');
+
+  fs.writeFile('tempDroneMission/testMission.json', mission_initial, 'utf8');
+
+  res.setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(mission_initial));
 };
 
 
