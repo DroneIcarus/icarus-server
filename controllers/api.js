@@ -45,11 +45,14 @@ exports.getDroneMission = (req, res) => {
   }
 
   console.log('getDroneMission2');
+  var testJson = {
+    test1 : 'allo'
+  };
+  var test2 = "{'test1':'allo'}";
 
   fs.writeFile('tempDroneMission/testMission.json', mission_initial, 'utf8');
-
   res.setHeader('Content-Type', 'application/json');
-  res.send(JSON.stringify(mission_initial));
+  res.send(JSON.stringify(testJson));
 };
 
 
