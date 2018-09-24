@@ -60,6 +60,7 @@ function executeOptimizeMissionScript(response, callback){
     if (err) {
       console.log(err);
       response.error = 'Error during the optimization...';
+      response.error = err;
       callback(true, response);
     } else {
       console.log(stdout);
@@ -92,8 +93,6 @@ function optimizeMission(req, res, callback) {
 exports.getDroneMission = (req, res) => {
   optimizeMission(req, res, function(err, response) {
     if (err) {
-      console.error(err);
-      response.error = err;
       res.send(response);
     } else {
       res.send(response);
