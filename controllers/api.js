@@ -93,6 +93,7 @@ exports.getDroneMission = (req, res) => {
   optimizeMission(req, res, function(err, response) {
     if (err) {
       console.error(err);
+      response.error = err;
       res.send(response);
     } else {
       res.send(response);
