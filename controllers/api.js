@@ -14,6 +14,10 @@ const paypal = require('paypal-rest-sdk');
 const lob = require('lob')(process.env.LOB_KEY);
 const ig = require('instagram-node').instagram();
 const fs = require('fs');
+
+var sys = require('sys')
+var exec = require('child_process').exec;
+
 const { Venues, Users } = require('node-foursquare')({
   secrets: {
     clientId: process.env.FOURSQUARE_ID,
@@ -36,28 +40,66 @@ exports.getApi = (req, res) => {
   });
 };
 
-exports.getDroneMission = (req, res) => {
-  var mission_initial = null;
-  var mission_optimized = null;
+function readOptimizeMission(filePath, response, callback) {
+  fs.readFile('../Icarus-MissionOptimizer/' + filePath, 'utf8', function(err, contents) {
+    if (err) {
+      console.log(err);
+      response.error = 'Error during the optimization...';
+      callback(true, response);
+    } else {
+      fs.unlinkSync('../Icarus-MissionOptimizer/' + filePath);
+      response.plan = JSON.parse(contents);
+      callback(false, response);
+    }
+  });
+}
+
+function executeOptimizeMissionScript(response, callback){
+  let randomPath = Math.random().toString(36).substring(7).concat('.plan');
+  var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath, function(err, stdout, stderr) {
+    if (err) {
+      console.log(err);
+      response.error = 'Error during the optimization...';
+      callback(true, response);
+    } else {
+      console.log(stdout);
+      readOptimizeMission(randomPath, response, callback);
+    }
+  });
+}
+
+function optimizeMission(req, res, callback) {
+  let mission_initial = null;
+  let mission_optimized = null;
+  let response = {
+    plan : null,
+    error : null
+  };
 
   if(req.query && req.query.qgcPlan) {
     mission_initial = req.query.qgcPlan;
   }
 
-  console.log('getDroneMission2');
-  console.log(mission_initial);
+  if (mission_initial) {
+    fs.writeFileSync('../Icarus-MissionOptimizer/missionToOptimize.plan', mission_initial);
+    executeOptimizeMissionScript(response, callback);
+  } else {
+    response.error = 'Invalid initial plan';
+      callback(true, response);
+  }
+}
 
-  var testJson = {
-    test1 : 'allo'
-  };
-  var test2 = "{'test1':'allo'}";
-
-  fs.writeFile('tempDroneMission/testMission.json', mission_initial, 'utf8');
-  res.setHeader('Content-Type', 'application/json');
-  //res.send(JSON.stringify(testJson));
-  res.send(mission_initial);
+exports.getDroneMission = (req, res) => {
+  optimizeMission(req, res, function(err, response) {
+    if (err) {
+      console.error(err);
+      res.send(response);
+    } else {
+      res.send(response);
+    }
+    fs.unlinkSync('../Icarus-MissionOptimizer/missionToOptimize.plan');
+  });
 };
-
 
 /**
  * GET /api/foursquare
