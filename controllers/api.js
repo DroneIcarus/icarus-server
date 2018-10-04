@@ -62,7 +62,7 @@ function executeOptimizeMissionScript(response, callback){
       console.log(stderr);
       console.log(stdout);
       response.error = 'Error during the optimization...';
-      response.error = err;
+      response.error = stderr;
       callback(true, response);
     } else {
       console.log(stdout);
