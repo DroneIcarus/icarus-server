@@ -59,6 +59,8 @@ function executeOptimizeMissionScript(response, callback){
   var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath, function(err, stdout, stderr) {
     if (err) {
       console.log(err);
+      console.log(stderr);
+      console.log(stdout);
       response.error = 'Error during the optimization...';
       response.error = err;
       callback(true, response);
