@@ -54,9 +54,9 @@ function readOptimizeMission(filePath, response, callback) {
   });
 }
 
-function executeOptimizeMissionScript(response, callback){
+function executeOptimizeMissionScript(response, missionSettings, callback){
   let randomPath = Math.random().toString(36).substring(7).concat('.plan');
-  var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath, function(err, stdout, stderr) {
+  var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath + " " + missionSettings, function(err, stdout, stderr) {
     if (err) {
       console.log(err);
       console.log(stderr);
@@ -85,7 +85,7 @@ function optimizeMission(req, res, callback) {
 
   if (mission_initial) {
     fs.writeFileSync('../Icarus-MissionOptimizer/missionToOptimize.plan', mission_initial);
-    executeOptimizeMissionScript(response, callback);
+    executeOptimizeMissionScript(response, req.query.missionSettings, callback);
   } else {
     response.error = 'Invalid initial plan';
       callback(true, response);
