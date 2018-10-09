@@ -56,7 +56,7 @@ function readOptimizeMission(filePath, response, callback) {
 
 function executeOptimizeMissionScript(response, missionSettings, callback){
   let randomPath = Math.random().toString(36).substring(7).concat('.plan');
-  var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath + " '" + missionSettings + "'", function(err, stdout, stderr) {
+  var dir = exec("./scriptTest.sh missionToOptimize.plan " + randomPath + " \'" + missionSettings + "\'", function(err, stdout, stderr) {
     if (err) {
       console.log(err);
       console.log(stderr);
